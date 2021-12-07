@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+	<style type="text/css">
+		#login {
+			/*height: 40%;*/
+			/*border: 1px solid black;*/
+		}
+		div.col-lg-5 {
+			margin: 20px;
+		}
+		body,html {
+			margin: 0px;
+			padding: 0px;
+		}
+	</style>
+	<head>
+		<title>Login</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	</head>
+	<body>
+		<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+	    <script src="url.js"></script>
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<span class="navbar-brand mb-0 h1">SelfieLess Acts</span>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="login.html">Login</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="categories.html">Categories</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" href="catfunc.html">Acts</a>
+				</li>
+				<li>
+					<a class="nav-link" href="addcat.html">Add-a-Category</a>
+				</li>
+				<li>
+					<a class="nav-link" href="addact.html">Add-an-Act</a>
+				</li>
+			</ul>
+			<ul class="navbar-nav ml-auto">
+				<li>
+					<a class="nav-link" href="login.html">Remove a User</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-9" >
+					<div id="mainrow" class="row justify-content-around">
+				    	
+				    </div>
+				</div>
+			    <div class="col-lg-3 p-3 mb-5 bg-dark" id="login">
+			    	<form>
+						<div class="form-group">
+							<label class="text-white" for="categoryName">Category Name</label>
+							<input type="text" class="form-control  form-control-lg" id="categoryName" placeholder="Enter Category Name">
+						</div>
+						<div class="form-group">
+							<label class="text-white" for="start">Start Range</label>
+							<input type="number" class="form-control  form-control-lg" id="start" placeholder="Enter Start Range">
+						</div>
+						<div class="form-group">
+							<label class="text-white" for="end">End Range</label>
+							<input type="number" class="form-control  form-control-lg" id="end" placeholder="Enter End Range">
+						</div>
+						<button id="submit" type="button" class="btn btn-primary">Submit</button>
+					</form>
+			    </div>
+
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$( document ).ready(function() {
+	
+	// SUBMIT FORM
+    $("#submit").click(function(event) {
+		event.preventDefault();
+		ajaxGet();
+	});
+    
+    
+    function ajaxGet(){
+		var maindiv = document.getElementById("mainrow");
+		if(($("#start").val()!="")||($("#end").val()!=""))
+		{
+			$.get(localhost_url+"/api/v1/categories/"+$("#categoryName").val().toString()+"/acts/?start="+$("#start").val()+'&end='+$("#end").val(),function(data) {
+				console.log(data);
+				showacts(data);
+			});
+		}
+		else
+		{
+			$.get(localhost_url+"/api/v1/categories/"+$("#categoryName").val().toString()+"/acts/",function(data) {
+				console.log(data);
+				showacts(data);
+			});
+		}
+		function showacts(data)
+		{
+			while (mainrow.firstChild) {
+			    mainrow.removeChild(mainrow.firstChild);
+			}
+			console.log(data[0]);
+			for (var j = 0; j < data.length; ++j) {
+				var actId = data[j].actId.toString();
+				var rowdiv = document.createElement("div");
+				rowdiv.className = "col-lg-4";
+				mainrow.appendChild(rowdiv);
+				var carddiv = document.createElement("div");
+				carddiv.className = "card";
+				rowdiv.appendChild(carddiv);
+				var image = document.createElement("img");
+				image.src="data:image/jpeg;base64,"+data[j].imgB64;
+				image.className = "card-img-top";
+				image.alt = "image";
+				carddiv.appendChild(image);
+				var cardbody = document.createElement("div");
+				cardbody.className = "card-body";
+				carddiv.appendChild(cardbody);
+				var btn1 = document.createElement("button");
+				btn1.className = "btn btn-sm btn-outline-primary";
+				btn1.type = "button";
+				cardbody.appendChild(btn1);
+				var i = document.createElement("i");
+				i.className = "fa fa-thumbs-o-up";
+				btn1.appendChild(i);
+				btn1.addEventListener("click", function(event){
+					//var ob={}
+					var val=event.target.id;
+					//ob={act_id = val }
+					//arr = new Array();
+					//arr.push(parseInt(act_id));
+					console.log(val);
+					$.ajax({
+						'url': localhost_url + "/api/v1/acts/upvote",
+						'data': {act_id : val },
+						'type': "POST",
+						'crossDomain':true,
+						success: function(result){
+							window.location.reload();
+						},
+						error : function(e) {
+							alert("Error!")
+							console.log("ERROR: ", e);
+						}
+				});
+				});
+				btn1.id = actId.toString();
+				var h5 = document.createElement("h5");
+				h5.className = "card-title badge badge-light";
+				h5.innerHTML = data[j].upvotes.toString() + " Upvotes";
+				cardbody.appendChild(h5);
+				var p1 = document.createElement("p");
+				p1.className = "card-text";
+				p1.innerHTML = data[j].caption.toString();
+				cardbody.appendChild(p1);
+				var p2 = document.createElement("p");
+				p2.className = "card-text";
+				var small1 = document.createElement("small");
+				small1.className = "text-muted";
+				small1.innerHTML = data[j].timestamp.toString();
+				p2.appendChild(small1);
+				cardbody.appendChild(p2);
+				var p3 = document.createElement("p");
+				p3.className = "card-text";
+				var small2 = document.createElement("small");
+				small2.className = "text-muted";
+				small2.innerHTML = data[j].username.toString();
+				p3.appendChild(small2);
+				cardbody.appendChild(p3);
+				var btn2 = document.createElement("button");
+				btn2.type = "button";
+				btn2.className = "btn btn-sm btn-outline-danger float-right";
+				btn2.innerHTML = "Delete";
+				btn2.addEventListener("click", function(event)
+					{
+							actId = event.target.id;
+							$.ajax({
+							'url': localhost_url + "/api/v1/acts/" + actId,
+							'type': "DELETE",
+							success: function(result){
+							window.location.reload();
+					},
+					error : function(e) {
+					alert("Error!")
+					console.log("ERROR: ", e);
+				}
+				});
+				});
+				btn2.id = actId.toString();
+				cardbody.appendChild(btn2);
+			}
+		}
+    	// Reset FormData after Posting
+    	resetData();
+ 
+    }
+    
+    /*function del()
+	{
+		actId = event.target.id;
+		$.ajax({
+			'url': localhost_url + "/api/v1/acts/" + actId,
+			'type': "DELETE",
+			success: function(result){
+				window.location.reload();
+			},
+			error : function(e) {
+			alert("Error!")
+			console.log("ERROR: ", e);
+			}
+		});
+	}*/
+
+	/*function upvote_act()
+	{
+		var actId = event.target.id;
+		arr = new Array();
+		arr.push(parseInt(actId));
+		console.log(arr);
+		$.ajax({
+			'url': localhost_url + "/api/v1/acts/upvote",
+			'data': JSON.stringify(arr),
+			'type': "POST",
+			'contentType': 'application/json',
+			success: function(result){
+				window.location.reload();
+			},
+			error : function(e) {
+			alert("Error!")
+			console.log("ERROR: ", e);
+			}
+		});
+	}*/
+
+    function resetData(){
+    	$("#categoryName").val("");
+    	$("#start").val("");
+    	$("#end").val("");
+    		
+    }
+})
+	</script>
+</html>
