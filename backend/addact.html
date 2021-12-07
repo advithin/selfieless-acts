@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+	<style type="text/css">
+		#login {
+			/*height: 40%;*/
+			/*border: 1px solid black;*/
+		}
+		body,html {
+			margin: 0px;
+			padding: 0px;
+		}
+	</style>
+	<head>
+		<title>Login</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	</head>
+	<body>
+		<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+	    <script src="url.js"></script>
+		<img src="bg.jpg" class="img-fluid" style="position: fixed;max-width: 100%;">
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<span class="navbar-brand mb-0 h1">SelfieLess Acts</span>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="login.html">Login</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="categories.html">Categories</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="catfunc.html">Acts</a>
+				</li>
+				<li>
+					<a class="nav-link" href="addcat.html">Add-a-Category</a>
+				</li>
+				<li>
+					<a class="nav-link active" href="addact.html">Add-an-Act</a>
+				</li>
+			</ul>
+			<ul class="navbar-nav ml-auto">
+				<li>
+					<a class="nav-link" href="login.html">Remove a User</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="container-fluid" style="margin-top: 100px;">
+			<div class="row">
+			    <div class="col-lg-4 offset-md-4 shadow-lg p-3 mb-5 bg-dark rounded" id="login">
+			    	<form>
+			    		<div class="form-group">
+							<label class="text-white" for="actId">Act ID</label>
+							<input type="text" class="form-control  form-control-lg" id="actId" placeholder="Enter Act ID">
+						</div>
+						<div class="form-group">
+							<label class="text-white" for="username">Username</label>
+							<input type="text" class="form-control  form-control-lg" id="username" placeholder="Enter Username">
+						</div>
+						<div class="form-group">
+							<label class="text-white" for="caption">Caption</label>
+							<input type="text" class="form-control  form-control-lg" id="caption" placeholder="Enter Caption">
+						</div>
+						<div class="form-group">
+							<label class="text-white" for="categoryName">Category Name</label>
+							<input type="text" class="form-control  form-control-lg" id="categoryName" placeholder="Enter Category Name">
+						</div>
+						<div class="custom-file"style="margin-top: 10px;margin-bottom: 20px;" >
+							<input type="file" class="custom-file-input" id="image">
+							<label class="custom-file-label" for="image">Choose Image to upload</label>
+						</div>
+						<button id="submit" type="button" class="btn btn-primary">Submit</button>
+					</form>
+			    </div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+// $('.custom-file-input').on('change', function() { 
+	//    	var fileName = $(this).val().split('\\').pop(); 
+	//    	$(this).next('.custom-file-label').addClass("selected").html(fileName);
+	//    	var filesSelected = $(this).files;
+ //        console.log(filesSelected);
+ //        var fileToLoad = filesSelected[0];
+ //        var fileReader = new FileReader();
+ //        fileReader.readAsDataURL(fileToLoad);
+ //        Data = fileReader.result;
+	// });
+
+
+	$( document ).ready(function() {
+	// SUBMIT FORM
+	/*var Data;
+	 $("#image").change(function(){
+        var filesSelected = document.querySelector("#image").files;
+        $('.custom-file-label').addClass("selected").html(filesSelected[0].name);
+        if (filesSelected.length > 0) {
+            var fileToLoad = filesSelected[0];
+            var fileReader = new FileReader();
+            fileReader.onload = function(fileLoadedEvent) {
+                Data = fileLoadedEvent.target.result; // <--- data: base64
+                // console.log("Converted Base64 version is " + srcData);
+            }
+            fileReader.readAsDataURL(fileToLoad);
+        }
+    });*/
+
+    $("#submit").click(function(event) {
+		event.preventDefault();
+		ajaxPost();
+	});
+    
+    function getTimestamp() {
+  	var date = new Date(),
+    year = date.getFullYear(),
+    month = (date.getMonth() + 1).toString(),
+    formatedMonth = (month.length === 1) ? ("0" + month) : month,
+    day = date.getDate().toString(),
+    formatedDay = (day.length === 1) ? ("0" + day) : day,
+    hour = date.getHours().toString(),
+    formatedHour = (hour.length === 1) ? ("0" + hour) : hour,
+    minute = date.getMinutes().toString(),
+    formatedMinute = (minute.length === 1) ? ("0" + minute) : minute,
+    second = date.getSeconds().toString(),
+    formatedSecond = (second.length === 1) ? ("0" + second) : second;
+  	return formatedDay + "-" + formatedMonth + "-" + year + ":" + formatedHour + '-' + formatedMinute + '-' + formatedSecond;
+};
+
+
+    function ajaxPost(){
+    	
+    	// PREPARE FORM DATA
+    	timestamp_val = getTimestamp();
+    	
+		
+    	console.log($("#actId").val());
+		//Data = Data.split(",")[1]
+		//console.log(Data);
+		console.log(timestamp_val);
+		$.ajax({'url':localhost_url + "/api/v1/acts", 
+			   'data':{act_id: $("#actId").val(),
+					username: $("#username").val(),
+					timestamp: timestamp_val,
+					act_caption: $("#caption").val(),
+					cat_name: $("#categoryName").val(),
+					//imgB64: Data,
+					},
+				'type':"POST",
+				'crossDomain':true, 
+				success: function(result){
+    				window.location.replace("/assi2/categories.html");
+  		}
+  	});
+
+    };
+});
+
+	</script>
+</html>
